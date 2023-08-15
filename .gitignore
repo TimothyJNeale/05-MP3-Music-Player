@@ -1,4 +1,2 @@
-# Ignore all files in the "images" directory
-images/*
 # Ignore all files in the "music" directory
 music/*
