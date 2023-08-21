@@ -12,7 +12,7 @@ root.title("MP3 Player")
 root.geometry("500x400")
 root.iconbitmap("01 Nenebiker.ico")
 
-# Add Song Function
+# Add singlw song to end of playlist
 def add_song():
     song = filedialog.askopenfilename(initialdir=RUNDIR+'/music/', 
                                       title="Choose A Song", 
@@ -24,12 +24,17 @@ def add_song():
     song = song.replace(".mp3", "")
     playlist_box.insert(END, song)
 
-
-
-
-# Add Many Songs to Playlist
+# Add Many Songs to end of Playlist
 def add_many_songs():
-    pass
+    songs = filedialog.askopenfilenames(initialdir=RUNDIR+'/music/', 
+                                      title="Choose A Song", 
+                                      filetypes=(("mp3 Files", "*.mp3"), ))
+
+    # Loop through song list and replace directory info and mp3 extension
+    for song in songs:
+        song = song.replace("C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/", "")
+        song = song.replace(".mp3", "")
+        playlist_box.insert(END, song)
 
 # Create Playlist Box
 playlist_box = Listbox(root, bg="black", fg="white", width=80, 
