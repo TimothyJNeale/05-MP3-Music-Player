@@ -1,10 +1,12 @@
 from tkinter import *
 from tkinter import filedialog
 from pygame import mixer
+from mutagen.mp3 import MP3
 
-
-# Importing OS module
+import time
 import os
+
+
 
 # FInd initial directory
 RUNDIR = os.getcwd()
@@ -16,6 +18,27 @@ root.iconbitmap("01 Nenebiker.ico")
 
 # Initialize Pygame Mixer
 mixer.init()
+
+# Function to deal with time
+def play_time():
+    current_time = mixer.music.get_pos() / 1000
+    converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
+
+    # Get current song length
+    song = playlist_box.get(ACTIVE)
+    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+
+    song_mut = MP3(song)
+    global song_length
+    song_length = song_mut.info.length
+
+    #  update status bar if song is playing
+    if current_time > 0:
+        status_bar.config(text=f'Time Elapsed: {converted_current_time} of {time.strftime("%M:%S", time.gmtime(song_length))}  ') 
+
+    status_bar.after(1000, play_time) # Call play_time after 1 second
+
+    # Update slider position value to current song position
 
 # Add singlw song to end of playlist
 def add_song():
@@ -58,10 +81,14 @@ def play():
     mixer.music.load(song)
     mixer.music.play(loops=0)
 
+    # Call the play_time function to get song length
+    play_time()
+
 # Stop playing current song
 def stop():
     mixer.music.stop()
     playlist_box.selection_clear(ACTIVE)
+    status_bar.config(text=f'Time Elapsed: 00:00  ')
 
 # Create Global Pause Variable
 global paused
@@ -184,6 +211,10 @@ my_menu.add_cascade(label="Remove Songs", menu=remove_song_menu)
 remove_song_menu.add_command(label="Remove One Song from Playlist", command=delete_song)
 # Remove all songs from playlist
 remove_song_menu.add_command(label="Remove All Songs from Playlist", command=delete_all_songs)
+
+# Creste Status Bar
+status_bar = Label(root, text='Time Elapsed: 00:00  ', bd=1, relief=GROOVE, anchor=E)
+status_bar.pack(fill=X, side=BOTTOM, ipady=2)
 
 
 # Temporary Label
