@@ -1,6 +1,12 @@
 from tkinter import *
 from tkinter import filedialog
 
+# Importing OS module
+import os
+
+# FInd initial directory
+RUNDIR = os.getcwd()
+
 root = Tk()
 root.title("MP3 Player")
 root.geometry("500x400")
@@ -8,10 +14,16 @@ root.iconbitmap("01 Nenebiker.ico")
 
 # Add Song Function
 def add_song():
-    song = filedialog.askopenfilename(initialdir='music/', 
+    song = filedialog.askopenfilename(initialdir=RUNDIR+'/music/', 
                                       title="Choose A Song", 
                                       filetypes=(("mp3 Files", "*.mp3"), ))
-    my_label.config(text=song)
+    #my_label.config(text=song)
+
+    # Strip out the directory info and .mp3 extension from the song name
+    song = song.replace("C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/", "")
+    song = song.replace(".mp3", "")
+    playlist_box.insert(END, song)
+
 
 
 
@@ -20,7 +32,9 @@ def add_many_songs():
     pass
 
 # Create Playlist Box
-playlist_box = Listbox(root, bg="black", fg="green", width=60, selectbackground="green", selectforeground="black")
+playlist_box = Listbox(root, bg="black", fg="white", width=80, 
+                       selectbackground="green", selectforeground="white",
+                       activestyle='none')
 playlist_box.pack(pady=20)
 
 # Crete Player Control Frame
