@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
+from pygame import mixer
+
 
 # Importing OS module
 import os
@@ -11,6 +13,9 @@ root = Tk()
 root.title("MP3 Player")
 root.geometry("500x400")
 root.iconbitmap("01 Nenebiker.ico")
+
+# Initialize Pygame Mixer
+mixer.init()
 
 # Add singlw song to end of playlist
 def add_song():
@@ -44,6 +49,15 @@ def delete_song():
 def delete_all_songs():
     playlist_box.delete(0, END)
 
+# Play selected song
+def play():
+    song = playlist_box.get(ACTIVE)
+    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+
+    #my_label.config(text=song)
+    mixer.music.load(song)
+    mixer.music.play(loops=0)
+
 # Create Playlist Box
 playlist_box = Listbox(root, bg="black", fg="white", width=80, 
                        selectbackground="green", selectforeground="white",
@@ -65,7 +79,7 @@ stop_btn_img = PhotoImage(file="images/stop50.png")
 # Buttons with images
 back_button = Button(controls_frame, image=back_btn_img, borderwidth=0)
 forward_button = Button(controls_frame, image=forward_btn_img, borderwidth=0)
-play_button = Button(controls_frame, image=play_btn_img, borderwidth=0)
+play_button = Button(controls_frame, image=play_btn_img, borderwidth=0, command=play)
 pause_button = Button(controls_frame, image=pause_btn_img, borderwidth=0)
 stop_button = Button(controls_frame, image=stop_btn_img, borderwidth=0)
 
