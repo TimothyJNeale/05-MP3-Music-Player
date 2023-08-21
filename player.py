@@ -58,6 +58,11 @@ def play():
     mixer.music.load(song)
     mixer.music.play(loops=0)
 
+# Stop playing current song
+def stop():
+    mixer.music.stop()
+    playlist_box.selection_clear(ACTIVE)
+
 # Create Playlist Box
 playlist_box = Listbox(root, bg="black", fg="white", width=80, 
                        selectbackground="green", selectforeground="white",
@@ -81,7 +86,7 @@ back_button = Button(controls_frame, image=back_btn_img, borderwidth=0)
 forward_button = Button(controls_frame, image=forward_btn_img, borderwidth=0)
 play_button = Button(controls_frame, image=play_btn_img, borderwidth=0, command=play)
 pause_button = Button(controls_frame, image=pause_btn_img, borderwidth=0)
-stop_button = Button(controls_frame, image=stop_btn_img, borderwidth=0)
+stop_button = Button(controls_frame, image=stop_btn_img, borderwidth=0, command=stop)
 
 back_button.grid(row=0, column=0, padx=10)
 forward_button.grid(row=0, column=1, padx=10)
