@@ -36,6 +36,14 @@ def add_many_songs():
         song = song.replace(".mp3", "")
         playlist_box.insert(END, song)
 
+# Delete a song from playlist
+def delete_song():
+    playlist_box.delete(ANCHOR)
+
+# Delete all songs from playlist
+def delete_all_songs():
+    playlist_box.delete(0, END)
+
 # Create Playlist Box
 playlist_box = Listbox(root, bg="black", fg="white", width=80, 
                        selectbackground="green", selectforeground="white",
@@ -79,6 +87,13 @@ add_song_menu.add_command(label="Add One Song to Playlist", command=add_song)
 # Add many songs to playlist
 add_song_menu.add_command(label="Add Many Songs to Playlist", command=add_many_songs)
 
+# Remove Song Menu dropdown
+remove_song_menu = Menu(my_menu, tearoff=0)
+my_menu.add_cascade(label="Remove Songs", menu=remove_song_menu)
+# Remove one song from playlist
+remove_song_menu.add_command(label="Remove One Song from Playlist", command=delete_song)
+# Remove all songs from playlist
+remove_song_menu.add_command(label="Remove All Songs from Playlist", command=delete_all_songs)
 
 
 # Temporary Label
