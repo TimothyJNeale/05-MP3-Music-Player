@@ -80,6 +80,60 @@ def pause():
         mixer.music.pause()
         paused = True
 
+# Play the next song in the playlist
+def next_song():
+    # Get the current song tuple number
+    next_one = playlist_box.curselection() # returns a tuple
+
+    # Add one to the current song number
+    next_one = next_one[0]+1
+
+    # Grab the song title from the playlist
+    song = playlist_box.get(next_one)
+
+    # Add directory structure stuffs to the song title
+    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+    # Load and play the new song
+
+    mixer.music.load(song)
+    mixer.music.play(loops=0)
+
+    # Clear Active Bar in Playlist
+    playlist_box.selection_clear(0, END)
+
+    # Move active bar to next song
+    playlist_box.activate(next_one)
+
+    # Set Active Bar to next song
+    playlist_box.selection_set(next_one, last=None)
+
+# Play the previous song in the playlist
+def previous_song():
+    # Get the current song tuple number
+    next_one = playlist_box.curselection() # returns a tuple
+
+    # AMinus one to the current song number
+    next_one = next_one[0]-1
+
+    # Grab the song title from the playlist
+    song = playlist_box.get(next_one)
+
+    # Add directory structure stuffs to the song title
+    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+    # Load and play the new song
+
+    mixer.music.load(song)
+    mixer.music.play(loops=0)
+
+    # Clear Active Bar in Playlist
+    playlist_box.selection_clear(0, END)
+
+    # Move active bar to next song
+    playlist_box.activate(next_one)
+
+    # Set Active Bar to next song
+    playlist_box.selection_set(next_one, last=None)
+
 # Create Playlist Box
 playlist_box = Listbox(root, bg="black", fg="white", width=80, 
                        selectbackground="green", selectforeground="white",
@@ -99,8 +153,8 @@ stop_btn_img = PhotoImage(file="images/stop50.png")
 
 # Create Player Control Buttons
 # Buttons with images
-back_button = Button(controls_frame, image=back_btn_img, borderwidth=0)
-forward_button = Button(controls_frame, image=forward_btn_img, borderwidth=0)
+back_button = Button(controls_frame, image=back_btn_img, borderwidth=0,command=previous_song)
+forward_button = Button(controls_frame, image=forward_btn_img, borderwidth=0, command=next_song)
 play_button = Button(controls_frame, image=play_btn_img, borderwidth=0, command=play)
 pause_button = Button(controls_frame, image=pause_btn_img, borderwidth=0, command=pause)
 stop_button = Button(controls_frame, image=stop_btn_img, borderwidth=0, command=stop)
