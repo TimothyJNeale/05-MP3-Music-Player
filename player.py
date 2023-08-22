@@ -36,9 +36,10 @@ mixer.init()
 # Function to deal with time
 def play_time():
     global current_time
+    global paused
 
     # Increament timer if not paused
-    if not paused and song_length != 0:
+    if not paused and song_length != 0 and current_time <= song_length:
         current_time += 1
 
         converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
