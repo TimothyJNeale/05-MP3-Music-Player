@@ -31,13 +31,14 @@ def play_time():
     global song_length
     song_length = song_mut.info.length
 
-    #  update status bar if song is playing
+    song_slider.config(to=song_length, value=current_time)
+    #my_label.config(text=current_time)
+
+    # Update status bar if song is playing
     if current_time > 0:
         status_bar.config(text=f'Time Elapsed: {converted_current_time} of {time.strftime("%M:%S", time.gmtime(song_length))}  ') 
 
     status_bar.after(1000, play_time) # Call play_time after 1 second
-
-    # Update slider position value to current song position
 
 # Add singlw song to end of playlist
 def add_song():
@@ -160,10 +161,13 @@ def previous_song():
     # Set Active Bar to next song
     playlist_box.selection_set(next_one, last=None)
 
-
 # Create Volume Function
 def volume(x):
     mixer.music.set_volume(volume_slider.get())
+
+# Creae s slider function for song position
+def slide(x):
+    my_label.config(text=song_slider.get())
 
 
 # Create main frame
@@ -184,6 +188,11 @@ volume_frame.grid(row=0, column=1, padx=20)
 volume_slider = ttk.Scale(volume_frame, from_=1, to=0, orient=VERTICAL, 
                           length=125, value=.5, command=volume)
 volume_slider.pack(pady=10)
+
+# Create Song Slider
+song_slider = ttk.Scale(main_frame, from_=0, to=100, orient=HORIZONTAL,
+                        length=360, value=0, command=slide)
+song_slider.grid(row=2, column=0, pady=20)
 
 # Crete Player Control Frame
 controls_frame = Frame(main_frame)
