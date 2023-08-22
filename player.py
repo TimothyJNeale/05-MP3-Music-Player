@@ -13,6 +13,18 @@ STATUS_BAR_INTI_TEXT = 'Time Elapsed: 00:00 of 00:00  '
 # FInd initial directory
 RUNDIR = os.getcwd()
 
+global song_length
+song_length = 0
+
+global current_position
+current_time = 0
+
+global paused
+paused = False
+
+global current_song
+current_song = ''
+
 root = Tk()
 root.title("MP3 Player")
 root.geometry("500x400")
@@ -23,23 +35,19 @@ mixer.init()
 
 # Function to deal with time
 def play_time():
-    current_time = mixer.music.get_pos() / 1000
-    converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
+    global current_time
 
-    # Get current song length
-    song = playlist_box.get(ACTIVE)
-    song = MUSIC_PATH+f'{song}.mp3'
+    # Increament timer if not paused
+    if not paused and song_length != 0:
+        current_time += 1
 
-    song_mut = MP3(song)
-    global song_length
-    song_length = song_mut.info.length
+        converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
 
-    song_slider.config(to=song_length, value=current_time)
-    #my_label.config(text=current_time)
+        song_slider.config(to=song_length, value=current_time)
 
-    # Update status bar if song is playing
-    if current_time > 0:
-        status_bar.config(text=f'Time Elapsed: {converted_current_time} of {time.strftime("%M:%S", time.gmtime(song_length))}  ') 
+        # Update status bar if song is playing
+        if current_time > 0:
+            status_bar.config(text=f'Time Elapsed: {converted_current_time} of {time.strftime("%M:%S", time.gmtime(song_length))}  ') 
 
     status_bar.after(1000, play_time) # Call play_time after 1 second
 
@@ -80,25 +88,42 @@ def play():
     song = playlist_box.get(ACTIVE)
     song = MUSIC_PATH+f'{song}.mp3'
 
+     # Get current song length
+    song_mut = MP3(song)
+    global song_length
+    song_length = song_mut.info.length
+
     #my_label.config(text=song)
     mixer.music.load(song)
     mixer.music.play(loops=0)
 
-    # Call the play_time function to get song length
-    play_time()
+    # Initialise current time and paused
+    global current_song
+    current_song = song
+    global current_time
+    current_time = 0
+    global paused
+    paused = False
 
 # Stop playing current song
 def stop():
     mixer.music.stop()
     playlist_box.selection_clear(ACTIVE)
 
+    global song_length
+    song_length = 0
+
+    # Initialise current time and paused
+    global current_time
+    current_time = 0
+    global paused
+    paused = False
+    global current_song
+    current_song = ''
+
     # Reset slider and status bar
     status_bar.config(text=STATUS_BAR_INTI_TEXT)
     song_slider.config(value=0)
-
-# Create Global Pause Variable
-global paused
-paused = False
 
 # Pause and Unpause The Current Song
 def pause():
@@ -107,11 +132,12 @@ def pause():
     if paused:
         # Unpause
         mixer.music.unpause()
-        paused = False
     else:
         # Pause
         mixer.music.pause()
-        paused = True
+
+    # set paused to opposite of what it was
+    paused = not paused
 
 # Play the next song in the playlist
 def next_song():
@@ -131,9 +157,21 @@ def next_song():
     # Add directory structure stuffs to the song title
     song = MUSIC_PATH+f'{song}.mp3'
     # Load and play the new song
-
     mixer.music.load(song)
     mixer.music.play(loops=0)
+
+    # Initialise current time and paused
+    global current_song
+    current_song = song
+    global current_time
+    current_time = 0
+    global paused
+    paused = False
+
+     # Get current song length
+    song_mut = MP3(song)
+    global song_length
+    song_length = song_mut.info.length
 
     # Clear Active Bar in Playlist
     playlist_box.selection_clear(0, END)
@@ -161,10 +199,23 @@ def previous_song():
 
     # Add directory structure stuffs to the song title
     song = MUSIC_PATH+f'{song}.mp3'
-    # Load and play the new song
 
+    # Get current song length
+    song_mut = MP3(song)
+    global song_length
+    song_length = song_mut.info.length
+
+    # Load and play the new song
     mixer.music.load(song)
     mixer.music.play(loops=0)
+
+    # Initialise current time and paused
+    global current_song
+    current_song = song
+    global current_time
+    current_time = 0
+    global paused
+    paused = False
 
     # Clear Active Bar in Playlist
     playlist_box.selection_clear(0, END)
@@ -179,10 +230,16 @@ def previous_song():
 def volume(x):
     mixer.music.set_volume(volume_slider.get())
 
-# Creae s slider function for song position
+# Creae slider function for song position
 def slide(x):
-    my_label.config(text=song_slider.get())
-
+    # Get currently selected song
+    global current_song
+    global current_time
+    
+    # Load song with pygame mixer
+    mixer.music.load(current_song)
+    current_time = song_slider.get()
+    mixer.music.play(loops=0, start=current_time)
 
 # Create main frame
 main_frame = Frame(root)
@@ -258,8 +315,7 @@ status_bar = Label(root, text=STATUS_BAR_INTI_TEXT, bd=1, relief=GROOVE, anchor=
 status_bar.pack(fill=X, side=BOTTOM, ipady=2)
 
 
-# Temporary Label
-my_label = Label(root, text="")
-my_label.pack(pady=20)
+# Call the play_time 
+play_time()
 
 root.mainloop()
