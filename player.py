@@ -2,11 +2,10 @@ from tkinter import *
 from tkinter import filedialog
 from pygame import mixer
 from mutagen.mp3 import MP3
+from tkinter import ttk
 
 import time
 import os
-
-
 
 # FInd initial directory
 RUNDIR = os.getcwd()
@@ -161,15 +160,34 @@ def previous_song():
     # Set Active Bar to next song
     playlist_box.selection_set(next_one, last=None)
 
+
+# Create Volume Function
+def volume(x):
+    mixer.music.set_volume(volume_slider.get())
+
+
+# Create main frame
+main_frame = Frame(root)
+main_frame.pack(pady=20)
+
 # Create Playlist Box
-playlist_box = Listbox(root, bg="black", fg="white", width=80, 
+playlist_box = Listbox(main_frame, bg="black", fg="white", width=60, 
                        selectbackground="green", selectforeground="white",
                        activestyle='none')
-playlist_box.pack(pady=20)
+playlist_box.grid(row=0, column=0)
+
+# Crete volume frame
+volume_frame = LabelFrame(main_frame, text="Volume")
+volume_frame.grid(row=0, column=1, padx=20)
+
+# Create Volume Slider
+volume_slider = ttk.Scale(volume_frame, from_=1, to=0, orient=VERTICAL, 
+                          length=125, value=.5, command=volume)
+volume_slider.pack(pady=10)
 
 # Crete Player Control Frame
-controls_frame = Frame(root)
-controls_frame.pack(pady=20)
+controls_frame = Frame(main_frame)
+controls_frame.grid(row=1, column=0, pady=20)
 
 # Deefine Button Images for Controls
 back_btn_img = PhotoImage(file="images/back50.png")
