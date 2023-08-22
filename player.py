@@ -7,6 +7,9 @@ from tkinter import ttk
 import time
 import os
 
+MUSIC_PATH = 'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/'
+STATUS_BAR_INTI_TEXT = 'Time Elapsed: 00:00 of 00:00  '
+
 # FInd initial directory
 RUNDIR = os.getcwd()
 
@@ -25,7 +28,7 @@ def play_time():
 
     # Get current song length
     song = playlist_box.get(ACTIVE)
-    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+    song = MUSIC_PATH+f'{song}.mp3'
 
     song_mut = MP3(song)
     global song_length
@@ -48,7 +51,7 @@ def add_song():
     #my_label.config(text=song)
 
     # Strip out the directory info and .mp3 extension from the song name
-    song = song.replace("C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/", "")
+    song = song.replace(MUSIC_PATH, "")
     song = song.replace(".mp3", "")
     playlist_box.insert(END, song)
 
@@ -60,7 +63,7 @@ def add_many_songs():
 
     # Loop through song list and replace directory info and mp3 extension
     for song in songs:
-        song = song.replace("C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/", "")
+        song = song.replace(MUSIC_PATH, "")
         song = song.replace(".mp3", "")
         playlist_box.insert(END, song)
 
@@ -75,7 +78,7 @@ def delete_all_songs():
 # Play selected song
 def play():
     song = playlist_box.get(ACTIVE)
-    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+    song = MUSIC_PATH+f'{song}.mp3'
 
     #my_label.config(text=song)
     mixer.music.load(song)
@@ -88,7 +91,10 @@ def play():
 def stop():
     mixer.music.stop()
     playlist_box.selection_clear(ACTIVE)
-    status_bar.config(text=f'Time Elapsed: 00:00  ')
+
+    # Reset slider and status bar
+    status_bar.config(text=STATUS_BAR_INTI_TEXT)
+    song_slider.config(value=0)
 
 # Create Global Pause Variable
 global paused
@@ -109,6 +115,10 @@ def pause():
 
 # Play the next song in the playlist
 def next_song():
+    # Reset slider and status bar
+    status_bar.config(text=STATUS_BAR_INTI_TEXT)
+    song_slider.config(value=0)
+
     # Get the current song tuple number
     next_one = playlist_box.curselection() # returns a tuple
 
@@ -119,7 +129,7 @@ def next_song():
     song = playlist_box.get(next_one)
 
     # Add directory structure stuffs to the song title
-    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+    song = MUSIC_PATH+f'{song}.mp3'
     # Load and play the new song
 
     mixer.music.load(song)
@@ -136,6 +146,10 @@ def next_song():
 
 # Play the previous song in the playlist
 def previous_song():
+    # Reset slider and status bar
+    status_bar.config(text=STATUS_BAR_INTI_TEXT)
+    song_slider.config(value=0)
+    
     # Get the current song tuple number
     next_one = playlist_box.curselection() # returns a tuple
 
@@ -146,7 +160,7 @@ def previous_song():
     song = playlist_box.get(next_one)
 
     # Add directory structure stuffs to the song title
-    song = f'C:/Users/zenby/OneDrive/Projects/2023/ZAI-008.23.03 Tkinter GUI Masterclass/05 MP3 Music Player/music/{song}.mp3'
+    song = MUSIC_PATH+f'{song}.mp3'
     # Load and play the new song
 
     mixer.music.load(song)
@@ -240,7 +254,7 @@ remove_song_menu.add_command(label="Remove One Song from Playlist", command=dele
 remove_song_menu.add_command(label="Remove All Songs from Playlist", command=delete_all_songs)
 
 # Creste Status Bar
-status_bar = Label(root, text='Time Elapsed: 00:00  ', bd=1, relief=GROOVE, anchor=E)
+status_bar = Label(root, text=STATUS_BAR_INTI_TEXT, bd=1, relief=GROOVE, anchor=E)
 status_bar.pack(fill=X, side=BOTTOM, ipady=2)
 
 
